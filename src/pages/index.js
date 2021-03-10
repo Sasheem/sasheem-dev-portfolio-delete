@@ -1,4 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
+
+import Layout from '../components/layout';
 
 // styles
 const pageStyles = {
@@ -7,7 +10,7 @@ const pageStyles = {
 	fontFamily: '-apple-system, Roboto, sans-serif, serif',
 };
 const headingStyles = {
-	marginTop: 0,
+	marginTop: 64,
 	marginBottom: 64,
 	maxWidth: 540,
 };
@@ -84,7 +87,7 @@ const links = [
 // markup
 const IndexPage = () => {
 	return (
-		<main style={pageStyles}>
+		<Layout>
 			<title>Home Page</title>
 			<h1 style={headingStyles}>
 				Hi my name is Sasheem.
@@ -113,7 +116,7 @@ const IndexPage = () => {
 					</li>
 				))}
 			</ul>
-		</main>
+		</Layout>
 	);
 };
 
