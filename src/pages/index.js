@@ -4,33 +4,21 @@ import styled from 'styled-components';
 import Layout from '../components/layout';
 
 // styles
-const pageStyles = {
-	color: '#232129',
-	padding: '96px',
-	fontFamily: '-apple-system, Roboto, sans-serif, serif',
-};
-const headingStyles = {
-	marginTop: 64,
-	marginBottom: 64,
-	maxWidth: 540,
-};
-const headingAccentStyles = {
-	color: '#663399',
-};
-const paragraphStyles = {
-	marginBottom: 48,
-};
-const codeStyles = {
-	color: '#8A6534',
-	padding: 4,
-	backgroundColor: '#FFF4DB',
-	fontSize: '1.25rem',
-	borderRadius: 4,
-};
-const listStyles = {
-	marginBottom: 96,
-	paddingLeft: 0,
-};
+const Heading = styled.h1`
+	margin-top: 256px;
+	margin-bottom: 352px;
+	max-width: 540px;
+`;
+
+const HeadingAccent = styled.span`
+	color: #663999;
+`;
+
+const Ul = styled.ul`
+	margin-bottom: 96px;
+	padding-left: 0;
+`;
+
 const listItemStyles = {
 	fontWeight: '300',
 	fontSize: '24px',
@@ -60,6 +48,7 @@ const docLink = {
 	url: 'https://github.com/Sasheem',
 	color: '#8954A8',
 };
+
 // data
 const links = [
 	{
@@ -89,33 +78,33 @@ const IndexPage = () => {
 	return (
 		<Layout>
 			<title>Home Page</title>
-			<h1 style={headingStyles}>
+			<Heading>
 				Hi my name is Sasheem.
 				<br />
-				<span style={headingAccentStyles}>
+				<HeadingAccent>
 					Welcome to my portfolio of websites and mobile apps!{' '}
-				</span>
+				</HeadingAccent>
 				<span role='img' aria-label='Party popper emojis'>
 					👨🏾‍💻
 				</span>
-			</h1>
-			<ul style={listStyles}>
+			</Heading>
+			<Ul>
 				<li style={docLinkStyle}>
-					<a style={linkStyle} href={docLink.url} target='_blank'>
+					<a style={linkStyle} href={docLink.url} target='_blank' rel="noreferrer">
 						{docLink.text}
 					</a>
 				</li>
 				{links.map((link) => (
 					<li key={link.url} style={{ ...listItemStyles, color: link.color }}>
 						<span>
-							<a style={linkStyle} href={link.url} target='_blank'>
+							<a style={linkStyle} href={link.url} target='_blank' rel="noreferrer">
 								{link.text}
 							</a>
 							<p style={descriptionStyle}>{link.description}</p>
 						</span>
 					</li>
 				))}
-			</ul>
+			</Ul>
 		</Layout>
 	);
 };

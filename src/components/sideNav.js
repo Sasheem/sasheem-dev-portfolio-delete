@@ -7,9 +7,10 @@ const Ul = styled.ul`
 	list-style: none;
 	display: flex;
 	flex-flow: row nowrap;
+	margin: 0;
 
 	li {
-		padding: 18px 10px;
+		padding: 25px 10px;
 	}
 	a,
 	p {
@@ -43,47 +44,8 @@ const Ul = styled.ul`
 `;
 const NavText = styled.p`
 	margin: 0;
-	font-size: 1rem;
+	font-size: 1.15rem;
 	font-weight: 700;
-`;
-
-const NavStyled = styled.nav`
-	height: 100%;
-	background-color: white;
-	box-shadow: 1px 0 7px rgba(0, 0, 0, 0.5);
-	position: fixed;
-	top: 0;
-	right: 0;
-	width: 70%;
-	max-width: 400px;
-	z-index: 200;
-	transform: translate(${(props) => {
-		console.log(`props.open: ${props.open}`)
-		return props.open === false ? 0 : 150}
-	}});
-	transition: transform 0.3s ease-out;
- 
-	ul {
-		height: 100%;
-		list-style: none;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-
-	li {
-		margin: 0.5rem 0;
-	}
-
-	a {
-		color: #3e4cae;
-		text-decoration: none;
-		font-size: 1.2rem;
-	}
-	a:hover,
-	a:active {
-		color: #1ca086;
-	}
 `;
 
 // markup
