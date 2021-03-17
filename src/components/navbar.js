@@ -7,8 +7,13 @@ import Hamburger from './hamburger';
 
 // styled components
 const Header = styled.header`
-	padding-left: 96px;
-	padding-right: 96px;
+	padding-left: 32px;
+	padding-right: 32px;
+
+	@media only screen and (min-width: 768px) {
+		padding-left: 96px;
+		padding-right: 96px;
+	}
 `;
 const LogoNav = styled.div`
 	padding: 25px 0;
