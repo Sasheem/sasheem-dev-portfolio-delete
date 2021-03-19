@@ -6,7 +6,7 @@ import Img from 'gatsby-image/withIEPolyfill';
 // styled components
 const Ul = styled.ul`
   margin-top: 64px;
-	margin-bottom: 96px;
+	margin-bottom: 288px;
 	padding-left: 0;
 	display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ const Li = styled.li`
     font-size: 24px;
     width: 100%;
     max-width: 75vw;
-    
+    margin-bottom: 32px;
 
     @media only screen and (min-width: 768px) {
       max-width: 25vw;
@@ -34,8 +34,6 @@ const ProjectLink = styled.a`
   min-width: 18em;
   height: 250px;
   border-radius: 0.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
 
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -52,11 +50,11 @@ const ProjectLink = styled.a`
     opacity: 0.8;
   }
 `;
-const ProjectTitle = styled.a`
+const ProjectTitle = styled.p`
   color: #116466;
   font-weight: bold;
   font-size: 16px;
-  vertical-align: 5%;
+  margin-top: 1em;
 `;
 const ProjectDescr = styled.p`
   color: #232129;
@@ -111,11 +109,12 @@ const Projects = ({ links }) => {
                   objectFit="fit"
                   style={{ borderRadius: '4px' }}
               />
+              <ProjectTitle>
+                {link.text}
+              </ProjectTitle>
+              <ProjectDescr>{link.description}</ProjectDescr>
             </ProjectLink>
-						<ProjectTitle href={link.url} target='_blank' rel="noreferrer">
-								{link.text}
-							</ProjectTitle>
-							<ProjectDescr>{link.description}</ProjectDescr>
+						
 					</Li>
 				))}
         </Ul>

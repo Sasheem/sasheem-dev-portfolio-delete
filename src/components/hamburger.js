@@ -8,8 +8,8 @@ const BurgerIcon = styled.div`
 	height: 2rem;
 	width: 2rem;
 	position: fixed;
-	top: 15px;
-	right: 20px;
+	top: 24px;
+	right: 24px;
 	z-index: 20;
 	display: none;
 
