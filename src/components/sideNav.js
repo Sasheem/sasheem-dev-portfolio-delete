@@ -8,6 +8,7 @@ const Ul = styled.ul`
 	display: flex;
 	flex-flow: row nowrap;
 	margin: 0;
+	z-index: 100;
 
 	li {
 		padding: 25px 10px;
@@ -49,15 +50,24 @@ const NavText = styled.p`
 `;
 
 // markup
-const SideNav = ({ open }) => {
+const SideNav = ({ open, setOpen }) => {
+
+	const handleProjectScroll = () => {
+		setOpen(!open);
+		scrollTo('#projects-section');
+	}
+	const handleContactScroll = () => {
+		setOpen(!open);
+		scrollTo('#contact-form');
+	}
 	return (
 		<Ul open={open}>
 			<li>
 				
-				<NavText onClick={() => scrollTo('#work-dev')}>Portfolio</NavText>
+				<NavText onClick={() => handleProjectScroll()}>Portfolio</NavText>
 			</li>
 			<li>
-				<NavText onClick={() => scrollTo('#contact')}>Contact</NavText>
+				<NavText onClick={() => handleContactScroll()}>Contact</NavText>
 			</li>
 		</Ul>
 	);

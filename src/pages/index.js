@@ -74,7 +74,7 @@ const IndexPage = () => {
 			<HeadingLink href={docLink.url} target='_blank' rel="noreferrer">
 				<GithubIcon />
 			</HeadingLink>
-			<SubHeading>My projects</SubHeading>
+			<SubHeading id="projects-section">My projects</SubHeading>
 			<Projects links={links} />
 			<Contact />
 		</Layout>

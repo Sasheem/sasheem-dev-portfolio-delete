@@ -56,7 +56,7 @@ const Hamburger = () => {
 				<div />
 				<div />
 			</BurgerIcon>
-			<SideNav open={open} />
+			<SideNav open={open} setOpen={setOpen} />
 		</>
 	);
 };

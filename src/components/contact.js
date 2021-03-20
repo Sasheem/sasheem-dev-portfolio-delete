@@ -4,7 +4,11 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 // styled components
 const Form = styled.form`
-    max-width: 30em;
+    max-width: 75vw;
+    
+    @media only screen and (min-width: 768px) {
+        max-width: 30em;
+    }
 `;
 const Row = styled.div`
     display: flex;
@@ -95,7 +99,7 @@ const Contact = () => {
     };
  
     return (
-        <Form>
+        <Form id="contact-form">
             <Row>
                 <Heading>Send me a message</Heading>
                 <p>Tell me about your project aspirations or we can meet over coffee <span role='img' aria-label='Coffee emoji'>
