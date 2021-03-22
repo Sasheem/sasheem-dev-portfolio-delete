@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useForm } from 'react-hook-form';
 
 // styled components
 const Form = styled.form`
@@ -47,11 +48,17 @@ const Button = styled.button`
     diplay: block;
     padding: 0.5rem;
 `;
-const ErrorText = styled.p``;
-const SuccessText = styled.p``;
+const ErrorText = styled.p`
+    color: red;
+`;
+const SuccessText = styled.p`
+    color: green;
+    text-align: center;
+`;
 
 // markup
 const Contact = () => {
+    const [submitted, setSubmitted] = useState(false);
     const [formValues, setFormValues] = useState({
         name: '',
         email: '',
@@ -59,105 +66,169 @@ const Contact = () => {
         subject: '',
         message: '',
     });
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [isProcessing, setIsProcessing] = useState(false);
     const recaptchaRef = useRef();
+    const { 
+        register, 
+        handleSubmit, 
+        errors, 
+        reset, 
+        setError, 
+        formState: { isSubmitting},
+    } = useForm();
+    const GATEWAY_URL = 'https://dff7228u2k.execute-api.us-east-1.amazonaws.com/prod';
+
+    // handle submit event
+    // error check & submit form w/ lambda function
+    const onSubmit = async data => {
+        try {
+          await fetch(GATEWAY_URL, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: JSON.stringify(data),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            },
+          });
+          // reset form data upon successful submit
+          reset();
+          setSubmitted(true);
+          setFormValues({
+              name: '',
+              email: '',
+              topic: '',
+              subject: '',
+              message: '',
+          })
+        } catch (error) {
+          // handle server errors
+          setError('submit', 'submitError', `Doh! ${error.message}`);
+        }
+      };
 
     // update input on change
     const handleChange = ev => {
         ev.persist();
-        setErrorMessage('');
         setFormValues(currentValues => ({
             ...currentValues,
             [ev.target.name]: ev.target.value,
         }));
     };
 
-    // error check & submit form w/ lambda function
-    const handleSubmit = async ev => {
-        ev.preventDefault();
-        const token = await recaptchaRef.current.getValue();
-        const { name, email, topic, subject, message } = formValues;
-
-        try {
-            if (token.length !== 0) {
-                setIsProcessing(true);
-
-                // make lambda function call
-            }
-        } catch (error) {
-            setIsProcessing(false);
-            setIsSuccess(false);
-            setErrorMessage(`Failed to send message: ${error.message}`)
-        }
-    };
-
     // handle recaptcha change
     const handleRecaptcha = (value) => {
         console.log(`Captcha value: ${value}`);
     };
+
+    // Component: Thank you message
+    const showThankYou = (
+        <SuccessText>Thank you I will get back to you in 1-2 days <br />
+            <Button onClick={() => setSubmitted(false)}>Send another message</Button>
+        </SuccessText>
+    );
+
+    // Component: Form
+    const showForm = 
+    <Form id="contact-form" onSubmit={handleSubmit(onSubmit)} method="post">
+        <Row>
+            <Heading>Send me a message</Heading>
+            <p>Tell me about your project aspirations or we can meet over coffee <span role='img' aria-label='Coffee emoji'>
+            ☕️
+            </span>
+            </p>
+        </Row>
+        <Row>
+            <Label htmlFor='name'>Your name</Label>
+            <Input 
+                type="text"  
+                name="name" 
+                placeholder="Name"
+                disabled={isSubmitting}
+                value={formValues.name} 
+                onChange={handleChange} 
+                ref={register({
+                    required: 'Name is required',
+                })} 
+            />
+            {errors.name && errors.name.message && <ErrorText>{errors.name.message}</ErrorText>}
+        </Row>
+        <Row>
+            <Label htmlFor='email'>Your email (so I can reply to you) </Label>
+            <Input 
+                type="text" 
+                name="email" 
+                placeholder="jon.appleseed@gmail.com"
+                disabled={isSubmitting} 
+                value={formValues.email} 
+                onChange={handleChange} 
+                ref={register({
+                    required: 'Email is required',
+                    pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+                })}  
+            />
+            {errors.email && errors.email.message && <ErrorText>{errors.email.message}</ErrorText>}
+        </Row>
+        <Row>
+            <Label htmlFor="topic">Topic</Label>
+            <Select ref={register} name="topic" disabled={isSubmitting}>
+                <option value="">Please select an option</option>
+                <option value="static">Static website</option>
+                <option value="dynamic">Dynamic website</option>
+                <option value="mobile">Mobile app</option>
+                <option value="consultation">Consultation</option>
+                <option value="other">Other</option>
+            </Select>
+        </Row>
+        <Row>
+            <Label htmlFor='subject'>Subject</Label>
+            <Input 
+                type="text"  
+                name="subject" 
+                placeholder="Let me know how I can help you"
+                disabled={isSubmitting} 
+                value={formValues.subject} 
+                onChange={handleChange}
+                ref={register}
+            />
+        </Row>
+        <Row>
+            <Label htmlFor='messageInput'>Message</Label>
+            <Textarea 
+                type="text" 
+                name="message" 
+                placeholder="Provide as many details as you can about your project"
+                disabled={isSubmitting} 
+                rows="8" 
+                value={formValues.message} 
+                onChange={handleChange} 
+                ref={register({
+                    required: 'Message is required',
+                })}
+            />
+            {errors.message && errors.message.message && <ErrorText>{errors.message.message}</ErrorText>}
+        </Row>
+        <Row>
+            <Button type="submit">
+                {isSubmitting ? 'Processing...' : 'Send Message'}
+            </Button>
+        </Row>
+        {errors && errors.submit && errors.submit.message &&
+            <Row>
+                {errors.submit.message}
+            </Row>
+        }
+        {/* <Row>
+            <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.GATSBY_SITE_KEY}
+                onChange={handleRecaptcha}
+                size="normal"
+            />
+        </Row> */}
+    </Form>;
  
     return (
-        <Form id="contact-form">
-            <Row>
-                <Heading>Send me a message</Heading>
-                <p>Tell me about your project aspirations or we can meet over coffee <span role='img' aria-label='Coffee emoji'>
-                ☕️
-                </span></p>
-                
-            </Row>
-            <Row>
-                <Label htmlFor='name-input'>Your name</Label>
-                <Input type="text" id="name-input" name="name" placeholder="Name" value={formValues.name} onChange={handleChange} required />
-            </Row>
-            <Row>
-                <Label htmlFor='email-input'>Your email (so I can reply to you) </Label>
-                <Input type="text" id="email-input" name="email" placeholder="jon.appleseed@gmail.com" value={formValues.email} onChange={handleChange} required />
-            </Row>
-            <Row>
-                <Label htmlFor="topic-input">Topic</Label>
-                <Select>
-                    <option value="">Please select an option</option>
-                    <option value="static">Static website</option>
-                    <option value="dynamic">Dynamic website</option>
-                    <option value="mobile">Mobile app</option>
-                    <option value="consultation">Consultation</option>
-                    <option value="other">Other</option>
-                </Select>
-            </Row>
-            <Row>
-                <Label htmlFor='subject-input'>Subject</Label>
-                <Input type="text" id="subject-input" name="subject" placeholder="Let me know how I can help you" value={formValues.subject} onChange={handleChange} required />
-            </Row>
-            <Row>
-                <Label htmlFor='message'>Message</Label>
-                <Textarea type="text" id="message-input" name="message" placeholder="Provide as many details as you can about your project" rows="8" value={formValues.message} onChange={handleChange} required />
-            </Row>
-            <Row>
-                <Button>
-                    {isProcessing ? 'Processing...' : 'Send Message'}
-                </Button>
-            </Row>
-            {/* <Row>
-                <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.GATSBY_SITE_KEY}
-                    onChange={handleRecaptcha}
-                    size="normal"
-                />
-            </Row> */}
-            {!!isSuccess && (
-              <Row>
-                  <SuccessText>Message sent!</SuccessText>
-              </Row>
-            )}
-            {!!errorMessage && (
-              <Row>
-                  <ErrorText>Error: {errorMessage}</ErrorText>
-              </Row>
-            )}
-        </Form>
+        submitted ? showThankYou : showForm
     );
 };
 
